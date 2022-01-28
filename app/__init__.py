@@ -1,20 +1,30 @@
+from ensurepip import bootstrap
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_wtf.csrf import CSRFProtect
-from app.config import DevConfig
+from config import config_options
 
+bootstrap=Bootstrap()
 #Initializing the application
 
-app=Flask(__name__,instance_relative_config=True)
+def create_app(config_name):
+  app=Flask(__name__)
 
-app.config.from_pyfile('config.py')
-app.config.from_object(DevConfig)
+  #Creating the app configurations
+  app.config.from_object(config_options[config_name])
 
-#Initializing flask extensions
+  #Initializing flask extensions
+  bootstrap.init_app(app)
 
-bootstrap=Bootstrap(app)
-csrf=CSRFProtect(app)
+  # Registering the blueprint
 
-from  app import views
+  from .main import main as main_blueprint
+  app.register_blueprint(main_blueprint)
+  #setting config
+  from .request import configure_request
+  configure_request(app)
 
-from app import error
+  return app
+
+# from  app import views
+# from app import error
