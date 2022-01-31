@@ -1,6 +1,6 @@
 import os
 
-from instance.config import MOVIE_API_KEY, SECRET_KEY
+# from instance.config import MOVIE_API_KEY, SECRET_KEY
 
 
 class Config:
