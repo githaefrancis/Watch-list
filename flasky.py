@@ -5,7 +5,8 @@ from flask_migrate import Migrate
 from app.models import User,Role
 app=create_app('development')
 
-migrate=Migrate(app,db)
+migrate=Migrate()
+migrate.init_app(app,db)
 
 @app.shell_context_processor
 def make_shell_context():
