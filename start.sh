@@ -6,7 +6,7 @@ export FLASK_APP=flasky.py
 # flask shell
 # flask run
 # flask test
-
+# export FLASK_ENV=development
 #flask db init
 
 #flask db migrate -m 'migrate message'
