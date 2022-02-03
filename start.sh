@@ -12,3 +12,9 @@ export FLASK_APP=flasky.py
 #flask db migrate -m 'migrate message'
 
 #flask db upgrade
+
+#db Error target-database-is-not-up-to-date
+
+# $ flask db stamp head  # To set the revision in the database to the head, without performing any migrations. You can change head to the required change you want.
+# $ flask db migrate     # To detect automatically all the changes.
+# $ flask db upgrade     # To apply all the changes.
