@@ -13,6 +13,8 @@ class Config:
   SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://moringa:1234@localhost/watchlist'
   UPLOAD_PHOTOS_DEST='app/static/photos'
 
+  UPLOAD_FOLDER = 'app/static/photos'
+
   MAIL_SERVER='smtp.googlemail.com'
   MAIL_PORT=587
   MAIL_USE_TLS=True

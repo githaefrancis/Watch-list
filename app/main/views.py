@@ -1,11 +1,18 @@
 
+import os
 from flask import render_template,request,redirect,url_for,abort
 from flask_login import login_required
 from . import main
 from app.request import get_movies,get_movie,search_movie
 from ..models import Review,User
 from .forms import ReviewForm,UpdateProfile
-from .. import db,photos
+from .. import db
+
+from werkzeug.utils import secure_filename
+
+import app
+
+ALLOWED_EXTENSIONS={'png','jpg','jpeg'}
 # Review=review.Review
 
 #Views 
@@ -95,14 +102,26 @@ def update_profile(uname):
   return render_template('profile/update.html',form=form)
 
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+
+
+
 @main.route('/user/<uname>/update/pic',methods=['POST'])
 @login_required
 def update_pic(uname):
   user=User.query.filter_by(username=uname).first()
   if 'photo' in request.files:
-    filename=photos.save(request.files['photo'])
-    path=f'photos/{filename}'
-    user.profile_pic_path=path
+    photo=request.files['photo']
+    # filename=photos.save(request.files['photo'])
+    filename=secure_filename(photo.filename)
+    # path=f'photos/{filename}'
+    photo.save(os.path.join('app/static/photos',filename))
+    user.profile_pic_path=f'photos/{filename}'
+    db.session.add(user)
     db.session.commit()
 
   return redirect(url_for('main.profile',uname=uname))
