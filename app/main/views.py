@@ -1,13 +1,13 @@
 
 import os
 from flask import render_template,request,redirect,url_for,abort
-from flask_login import login_required
+from flask_login import current_user, login_required
 from . import main
 from app.request import get_movies,get_movie,search_movie
 from ..models import Review,User
 from .forms import ReviewForm,UpdateProfile
 from .. import db
-
+import markdown2
 from werkzeug.utils import secure_filename
 
 import app
@@ -29,7 +29,6 @@ def index():
   popular_movies=get_movies('popular')
   upcoming_movie=get_movies('upcoming')
   now_showing_movie=get_movies('now_playing')
-
   search_movie=request.args.get('movie_query')
 
   if search_movie:
@@ -68,7 +67,8 @@ def new_review(id):
   if form.validate_on_submit():
     title=form.title.data
     review=form.review.data
-    new_review=Review(movie.id,title,movie.poster,review)
+    # new_review=Review(movie.id,title,movie.poster,review)
+    new_review=Review(movie_id=movie.id,movie_title=title,image_path=movie.poster,movie_review=review,user=current_user)
     new_review.save_review()
     return redirect(url_for('main.movie',id=movie.id))
 
@@ -126,3 +126,12 @@ def update_pic(uname):
 
   return redirect(url_for('main.profile',uname=uname))
 
+@main.route('/review/<int:id>')
+def single_review(id):
+  review=Review.query.get(id)
+  if review is None:
+    abort(404)
+  format_review=markdown2.markdown(review.movie_review,extras=["code-friendly","fenced-code-blocks"])
+  return render_template('review.html',review=review,format_review=format_review)
+
+  

@@ -10,7 +10,6 @@ class Config:
   MOVIE_API_BASE_URL='https://api.themoviedb.org/3/movie/{}?api_key={}'
   MOVIE_API_KEY=os.environ.get('MOVIE_API_KEY')
   SECRET_KEY=os.environ.get('SECRET_KEY')
-  SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://moringa:1234@localhost/watchlist'
   UPLOAD_PHOTOS_DEST='app/static/photos'
 
   UPLOAD_FOLDER = 'app/static/photos'
@@ -21,6 +20,11 @@ class Config:
   MAIL_USERNAME=os.environ.get("MAIL_USERNAME")
   MAIL_PASSWORD=os.environ.get("MAIL_PASSWORD")
 
+
+  SIMPLEMDE_JS_IIFE=True
+  SIMPLEMDE_USE_CDN=True
+
+  
 class ProdConfig(Config):
   '''
   Production configuration child class
@@ -30,6 +34,9 @@ class ProdConfig(Config):
   '''
   pass
 
+class TestConfig(Config):
+  SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://moringa:1234@localhost/watchlist_test'
+
 class DevConfig(Config):
   '''
   Development configuration child class
@@ -37,11 +44,13 @@ class DevConfig(Config):
   Args:
       Config: The parent configuration class with General configuration settings
   '''
+  SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://moringa:1234@localhost/watchlist'
   DEBUG=True
 
 config_options={
   'development':DevConfig,
-  'production':ProdConfig
+  'production':ProdConfig,
+  'test':TestConfig
 }
 
 # email configurations
